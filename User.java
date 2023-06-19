@@ -1,24 +1,18 @@
-import java.util.ArrayList;
-import java.util.List;
-
 abstract class User {
     String username;
     String password;
 
-    int totalSuratMasuk = 0;
-    int totalSuratKeluar = 0;
+    String fileSuratMasuk = "datafile/masuk/ListSuratMasuk.txt";
+    String filePengirim = "datafile/masuk/ListPengirim.txt";
+    String fileNoSuratMasuk = "datafile/masuk/ListNoSuratMasuk.txt";
+    String fileTanggalSuratMasuk = "datafile/masuk/ListTanggalSuratMasuk.txt";
+    String fileTanggalMasuk = "datafile/masuk/ListTanggalMasuk.txt";
 
-    ArrayList<SuratMasuk> listSuratMasuk =  new ArrayList<SuratMasuk>();
-    List<String> listPengirim =  new ArrayList<String>();
-    List<String> listNoSuratMasuk =  new ArrayList<String>();
-    List<String> listTanggalMasuk =  new ArrayList<String>();
-    List<String> listTanggalSuratMasuk =  new ArrayList<String>();
-
-    ArrayList<SuratKeluar> listSuratKeluar =  new ArrayList<SuratKeluar>();
-    List<String> listTujuan =  new ArrayList<String>();
-    List<String> listNoSuratKeluar =  new ArrayList<String>();
-    List<String> listTanggalKeluar =  new ArrayList<String>();
-    List<String> listTanggalSuratKeluar =  new ArrayList<String>();
+    String fileSuratKeluar = "datafile/keluar/ListSuratKeluar.txt";
+    String fileTujuan = "datafile/keluar/ListTujuan.txt";
+    String fileNoSuratKeluar = "datafile/keluar/ListNoSuratKeluar.txt";
+    String fileTanggalSuratKeluar = "datafile/keluar/ListTanggalSuratKeluar.txt";
+    String fileTanggalKeluar = "datafile/keluar/ListTanggalKeluar.txt";
 
     public User(String username, String password) {
         this.username = username;
