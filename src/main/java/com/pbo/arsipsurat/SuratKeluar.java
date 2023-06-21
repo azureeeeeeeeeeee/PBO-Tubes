@@ -4,16 +4,24 @@
  */
 package com.pbo.arsipsurat;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Reno
  */
-public class MainMenuForm extends javax.swing.JFrame {
+public class SuratKeluar extends javax.swing.JFrame {
 
     /**
      * Creates new form MainMenuForm
      */
-    public MainMenuForm() {
+    public SuratKeluar() {
         initComponents();
     }
 
@@ -27,7 +35,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelsuratmasuk = new javax.swing.JTable();
+        tabelsuratkeluar = new javax.swing.JTable();
         inputNomorSurat = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         inputTanggalSurat = new javax.swing.JTextField();
@@ -36,43 +44,25 @@ public class MainMenuForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         inputLampiran = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        inputPengirim = new javax.swing.JTextField();
+        inputPenerima = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         buttonTambah = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tombolhapus = new javax.swing.JButton();
+        backtomain = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tabelsuratmasuk.setModel(new javax.swing.table.DefaultTableModel(
+        tabelsuratkeluar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Nomor Surat", "Tanggal Surat", "Perihal", "Lampiran", "Pengirim"
+                "Nomor Surat", "Tanggal Surat", "Penerima", "Perihal", "Lampiran"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -86,17 +76,30 @@ public class MainMenuForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tabelsuratmasuk.setColumnSelectionAllowed(true);
-        tabelsuratmasuk.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tabelsuratmasuk);
-        tabelsuratmasuk.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        if (tabelsuratmasuk.getColumnModel().getColumnCount() > 0) {
-            tabelsuratmasuk.getColumnModel().getColumn(0).setResizable(false);
-            tabelsuratmasuk.getColumnModel().getColumn(1).setResizable(false);
-            tabelsuratmasuk.getColumnModel().getColumn(2).setResizable(false);
-            tabelsuratmasuk.getColumnModel().getColumn(3).setResizable(false);
-            tabelsuratmasuk.getColumnModel().getColumn(4).setResizable(false);
+        tabelsuratkeluar.setColumnSelectionAllowed(false);
+        tabelsuratkeluar.getTableHeader().setReorderingAllowed(false);
+        databaseConnection connect = new databaseConnection();
+        Connection connectDB = connect.getConnection();
+        String query = "SELECT * FROM suratkeluar";
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Nomor Surat","Tanggal Surat","Penerima","Perihal","Lampiran"},0);
+        try{
+            Statement statement = connectDB.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            while (queryResult.next()){
+                String column1 = queryResult.getString("nomorsurat");
+                String column2 = queryResult.getString("tanggalsurat");
+                String column3 = queryResult.getString("penerima");
+                String column4 = queryResult.getString("perihal");
+                String column5 = queryResult.getString("lampiran");
+                model.addRow(new Object[]{column1,column2,column3,column4,column5});
+
+            }
+            tabelsuratkeluar.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        jScrollPane1.setViewportView(tabelsuratkeluar);
+        tabelsuratkeluar.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         inputNomorSurat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,16 +133,16 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         jLabel4.setText("Lampiran");
 
-        inputPengirim.addActionListener(new java.awt.event.ActionListener() {
+        inputPenerima.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputPengirimActionPerformed(evt);
+                inputPenerimaActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Pengirim");
+        jLabel5.setText("Penerima");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setText("Surat Masuk");
+        jLabel6.setText("Surat Keluar");
 
         buttonTambah.setText("Tambah/Update");
         buttonTambah.addActionListener(new java.awt.event.ActionListener() {
@@ -148,7 +151,19 @@ public class MainMenuForm extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Hapus");
+        tombolhapus.setText("Hapus");
+        tombolhapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolhapusActionPerformed(evt);
+            }
+        });
+
+        backtomain.setText("Back to Main Menu");
+        backtomain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backtomainActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -156,10 +171,6 @@ public class MainMenuForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,7 +185,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(inputPengirim, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(inputPenerima, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -187,20 +198,30 @@ public class MainMenuForm extends javax.swing.JFrame {
                                     .addComponent(jLabel4)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(inputLampiran, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addComponent(tombolhapus)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(backtomain)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(backtomain)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(42, 42, 42)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(inputNomorSurat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
@@ -218,7 +239,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inputPengirim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inputPenerima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addComponent(buttonTambah)
@@ -226,7 +247,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(tombolhapus)
                         .addGap(39, 39, 39))))
         );
 
@@ -249,13 +270,105 @@ public class MainMenuForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inputLampiranActionPerformed
 
-    private void inputPengirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPengirimActionPerformed
+    private void inputPenerimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPenerimaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_inputPengirimActionPerformed
+    }//GEN-LAST:event_inputPenerimaActionPerformed
 
     private void buttonTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTambahActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_buttonTambahActionPerformed
+
+        String no_surat = inputNomorSurat.getText();
+        String tanggalsurat = inputTanggalSurat.getText();
+        String perihal = inputPerihal.getText();
+        String lampiran = inputLampiran.getText();
+        String penerima = inputPenerima.getText();
+
+        databaseConnection connect = new databaseConnection();
+        Connection connectDB = connect.getConnection();
+        String qupdate = "INSERT INTO suratkeluar(nomorsurat,tanggalsurat,penerima,perihal,lampiran) VALUES('" + no_surat + "','" + tanggalsurat + "','" + penerima + "','" + perihal + "','" + lampiran + "')";
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Nomor Surat", "Tanggal Surat", "Penerima", "Perihal", "Lampiran"}, 0);
+        try {
+            Statement statement = connectDB.createStatement();
+            statement.executeUpdate(qupdate);
+
+            loadTable();
+
+        } catch (SQLException e) {
+            String updatedata = "UPDATE suratkeluar SET nomorsurat = '" + no_surat + "',tanggalsurat = '" + tanggalsurat + "',penerima ='" + penerima + "',perihal='" + perihal + "',lampiran='" + lampiran + "'WHERE nomorsurat='" + no_surat + "'";
+//            String queryy = "SELECT * FROM suratmasuk";
+//            DefaultTableModel modelll = new DefaultTableModel(new Object[]{"Nomor Surat", "Tanggal Surat", "Penerima", "Perihal", "Lampiran"}, 0);
+            try {
+                Statement statement = connectDB.createStatement();
+                statement.executeUpdate(updatedata);
+                loadTable();
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    
+
+            }//GEN-LAST:event_buttonTambahActionPerformed
+
+    private void backtomainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backtomainActionPerformed
+        MainMenu MainMenu = new MainMenu();
+        MainMenu.setVisible(true);
+        dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_backtomainActionPerformed
+
+
+    private void tombolhapusActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        databaseConnection connect = new databaseConnection();
+        Connection connectDB = connect.getConnection();
+
+
+        if (tabelsuratkeluar.getSelectedRowCount() == 1) {
+            int selectvalue = tabelsuratkeluar.getSelectedRow();
+            Object selecteddata = tabelsuratkeluar.getValueAt(selectvalue, 0);
+            String convertedSelectedData = String.valueOf(selecteddata);
+            loadTable();
+            String query = "DELETE FROM suratkeluar WHERE nomorsurat = '" + convertedSelectedData + "'";
+//            DefaultTableModel modelll = new DefaultTableModel(new Object[]{"Nomor Surat", "Tanggal Surat", "", "Perihal", "Lampiran"}, 0);
+            try {
+                Statement statement = connectDB.createStatement();
+                statement.executeUpdate(query);
+                loadTable();
+
+
+            }                                            
+            catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
+    private void loadTable(){
+        databaseConnection connect = new databaseConnection();
+        Connection connectDB = connect.getConnection();
+        String query = "SELECT * FROM suratkeluar";
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Nomor Surat","Tanggal Surat","Penerima","Perihal","Lampiran"},0);
+        try{
+            Statement statement = connectDB.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            while (queryResult.next()){
+                String column1 = queryResult.getString("nomorsurat");
+                String column2 = queryResult.getString("tanggalsurat");
+                String column3 = queryResult.getString("penerima");
+                String column4 = queryResult.getString("perihal");
+                String column5 = queryResult.getString("lampiran");
+                model.addRow(new Object[]{column1,column2,column3,column4,column5});
+
+
+            }
+            tabelsuratkeluar.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     /**
      * @param args the command line arguments
@@ -264,7 +377,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -274,32 +387,36 @@ public class MainMenuForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainMenuForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SuratKeluar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainMenuForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SuratKeluar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainMenuForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SuratKeluar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainMenuForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SuratKeluar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainMenuForm().setVisible(true);
+                new SuratKeluar().setVisible(true);
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backtomain;
     private javax.swing.JButton buttonTambah;
     private javax.swing.JTextField inputLampiran;
     private javax.swing.JTextField inputNomorSurat;
-    private javax.swing.JTextField inputPengirim;
+    private javax.swing.JTextField inputPenerima;
     private javax.swing.JTextField inputPerihal;
     private javax.swing.JTextField inputTanggalSurat;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -307,6 +424,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tabelsuratmasuk;
+    private javax.swing.JTable tabelsuratkeluar;
+    private javax.swing.JButton tombolhapus;
     // End of variables declaration//GEN-END:variables
 }
