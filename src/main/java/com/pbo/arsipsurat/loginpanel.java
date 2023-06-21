@@ -128,7 +128,7 @@ public class loginpanel extends javax.swing.JFrame {
 
             while (queryResult.next()){
                 if (queryResult.getInt(1)==1){
-                    String verifyuser = "SELECT count(1) FROM userdata WHERE username ='"+usernameinput.getText()+"'AND jenispengguna ='"+1+"'";
+                    String verifyuser = "SELECT count(1) FROM userdata WHERE username ='"+usernameinput.getText()+"'";
                     ResultSet hasilquery = statement.executeQuery(verifyuser);
                     while (hasilquery.next()){
                         if(hasilquery.getInt(1)==1){
@@ -142,6 +142,7 @@ public class loginpanel extends javax.swing.JFrame {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
 
         }
 

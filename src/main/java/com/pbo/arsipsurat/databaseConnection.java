@@ -18,11 +18,11 @@ public class databaseConnection {
     Connection dbConection;
 
     public Connection getConnection() {
-        String databaseUser = "root";
-        String databasePassword= "";
-        String url = "jdbc:mysql://localhost:3306/arsipsurat";
+        String databaseUser = "rio31";
+        String databasePassword= "arsiprio";
+        String url = "jdbc:mysql://51.161.134.32:3306/arsip_surat";
                 try {
-//                    Class.forName("com.mysql.cj.jdbc.Driver");
+//                  Class.forName("com.mysql.cj.jdbc.Driver");
                     dbConection = DriverManager.getConnection(url,databaseUser,databasePassword);
         } catch (Exception e) {
                     e.printStackTrace();
