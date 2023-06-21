@@ -42,7 +42,7 @@ public class About extends javax.swing.JFrame {
 
         jLabel2.setText("Sistem Informasi Arsip Surat");
 
-        jLabel3.setText("Made by Group 5");
+        jLabel3.setText("Made by Group 6");
 
         jLabel4.setText("- Reno Fahrezi Purnomo");
 
@@ -50,7 +50,7 @@ public class About extends javax.swing.JFrame {
 
         jLabel6.setText("- Tatak Adi Subagyo");
 
-        jLabel7.setText("- Tatak Adi Subagyo");
+        jLabel7.setText("- Muhammad Akmal Al Fathan");
 
         backtomain.setText("Back");
         backtomain.addActionListener(new java.awt.event.ActionListener() {

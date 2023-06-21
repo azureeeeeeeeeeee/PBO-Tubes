@@ -118,7 +118,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void tentangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tentangActionPerformed
         // TODO add your handling code here:
-        About About = new About:
+        About About = new About();
         About.setVisible(true);
         dispose();
     }//GEN-LAST:event_tentangActionPerformed
